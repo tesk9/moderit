@@ -26,11 +26,10 @@ var db = (function() {
     });
   };
 
-  var addQuestion = function(req, res, str) {
+  var addQuestion = function(req, res) {
     findOneForum(req, res, function(forum) {
-      console.log(str);
       var question = new Question({
-        question: str,
+        question: req.query.question,
         forum_id: forum.id
       });
       question.save(function(err) {

@@ -31,7 +31,7 @@ router.get('/forum/:url/question', function(req, res, next) {
 });
 
 router.post('/forum/:url/question', function(req, res, next) {
-  db.addQuestion(req, res, req.query.question);
+  db.addQuestion(req, res);
 });
 
 router.get('/:url', function(req, res, next) {
