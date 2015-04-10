@@ -37,12 +37,25 @@ var db = (function() {
       });
       res.status(201).send();
     });
+  };
+
+  var createForum = function(req, res) {
+    var newRoute = "" + Math.floor(Math.random() * 100) + Date.now();
+    var forum = new Forum({
+      title: req.query.name,
+      url: newRoute
+    });
+    forum.save(function(err) {
+      if(err) { throw err; }
+      res.status(201).send();
+    });
   }
 
   return {
     findOneForum: findOneForum,
     getQuestionsByForum: getQuestionsByForum,
-    addQuestion: addQuestion
+    addQuestion: addQuestion,
+    createForum: createForum
   };
 })()
 
