@@ -34,8 +34,8 @@ var db = (function() {
       });
       question.save(function(err) {
         if(err) { throw err; }
+        res.status(201).send();
       });
-      res.status(201).send();
     });
   };
 
