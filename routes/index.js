@@ -26,6 +26,14 @@ router.post('/forum', function(req, res, next) {
   res.send("This page is still being built");
 });
 
+router.get('/forum/:url/question', function(req, res, next) {
+  res.send("This page is still being built");
+});
+
+router.post('/forum/:url/question', function(req, res, next) {
+  db.addQuestion(req, res, req.query.question);
+});
+
 router.get('/:url', function(req, res, next) {
   db.getQuestionsByForum(req, res);
 });

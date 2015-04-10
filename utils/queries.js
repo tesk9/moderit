@@ -26,9 +26,24 @@ var db = (function() {
     });
   };
 
+  var addQuestion = function(req, res, str) {
+    findOneForum(req, res, function(forum) {
+      console.log(str);
+      var question = new Question({
+        question: str,
+        forum_id: forum.id
+      });
+      question.save(function(err) {
+        if(err) { throw err; }
+      });
+      res.status(201).send();
+    });
+  }
+
   return {
     findOneForum: findOneForum,
-    getQuestionsByForum: getQuestionsByForum
+    getQuestionsByForum: getQuestionsByForum,
+    addQuestion: addQuestion
   };
 })()
 
