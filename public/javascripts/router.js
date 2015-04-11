@@ -6,9 +6,10 @@ var Router = Backbone.Router.extend({
   loadForum: function(forum) {
     Backbone.ajax({
       method: "GET",
-      url: "/forum/" + forum,
+      url: "/" + forum,
       success: function(result) {
-        console.log(result);
+        var forum = new QuestionCollection(result);
+        new QuestionsView({collection: forum});
       },
       error: function(err) {
         console.log("Err");
@@ -20,5 +21,5 @@ var Router = Backbone.Router.extend({
 
 $(function() {
   new Router();
-  Backbone.history.start()
+  Backbone.history.start();
 });
