@@ -1,11 +1,15 @@
 var Question = Backbone.Model.extend({
-  initialize: function(questionObj) {
-    this.set('question', questionObj.question);
-    // console.log("this.model.url", this.url());
+  initialize: function(questionObj, forum) {
+    this.set("question", questionObj.question);
+    this.set("forum", forum);
   },
-  validate: function() {
-    if(this.get('question')) {
-      console.log("validating", this.get('question'));
+  validate: function(attrs) {
+    var question = attrs.question;
+    if(!(question.length > 15 && question.match(/^[A-z]/))) {
+      return "Invalid question";
     }
+  },
+  urlRoot: function() {
+    return "forum/" + "90832" + "/question";
   }
 });

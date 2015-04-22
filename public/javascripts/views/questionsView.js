@@ -2,11 +2,16 @@ var QuestionsView = Backbone.View.extend({
   className: "forum",
   template: _.template("<div>Submit a Question:<form><input type='text' class='new-question'></input><button id='submit-question'>Submit</button></form></div><div>Questions:<ul></ul></div>"),
   events: {
-    'click #submit-question': function() {
+    "click #submit-question": function() {
       var newQuestion = this.$el.find("form .new-question").val();
       var newQ = new Question({question: newQuestion});
-      newQ.save()
-      this.$el.find("form .new-question").val("");
+      if(newQ.save()) {
+        this.collection.add(newQ);
+        this.$el.find("form p.invalid-question").remove();
+        this.$el.find("form .new-question").val("");
+      } else { 
+        this.$el.find("form").append("<p class='invalid-question'> Question must be at least 15 characters</p>");
+      }
     }
   },
   initialize: function() {

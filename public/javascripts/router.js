@@ -8,8 +8,8 @@ var Router = Backbone.Router.extend({
       method: "GET",
       url: "/" + forum,
       success: function(result) {
-        var forum = new QuestionCollection(result);
-        new QuestionsView({collection: forum});
+        var forumQuestions = new QuestionCollection(result, forum);
+        new QuestionsView({collection: forumQuestions});
       },
       error: function(err) {
         console.log("Err");
