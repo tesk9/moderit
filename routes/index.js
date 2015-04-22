@@ -21,7 +21,7 @@ router.get('/forum/:url/question', function(req, res, next) {
 });
 
 router.post('/forum/:url/question', function(req, res, next) {
-  postHandler(req, res, db.addQuestion);
+  db.addQuestion(req, res);
 });
 
 router.get('/:url', function(req, res, next) {

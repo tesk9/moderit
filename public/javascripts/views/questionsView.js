@@ -14,7 +14,6 @@ var QuestionsView = Backbone.View.extend({
     this.render();
   },
   render: function() {
-    console.log("rendering")
     this.$el.html(this.template());
     $("section").append(this.$el);
     this.$el.find("ul").append(

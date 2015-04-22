@@ -27,9 +27,11 @@ var db = (function() {
   };
 
   var addQuestion = function(req, res) {
+    var quest = req.query.question ? req.query.question : req.body.question;
+    console.log(quest);
     findOneForum(req, res, function(forum) {
       var question = new Question({
-        question: req.query.question,
+        question: quest,
         forum_id: forum.id
       });
       question.save(function(err) {
