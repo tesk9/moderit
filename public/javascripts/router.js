@@ -1,3 +1,4 @@
+var forumID;
 var Router = Backbone.Router.extend({
   routes: {
     ":forum": "loadForum"
@@ -8,8 +9,9 @@ var Router = Backbone.Router.extend({
       method: "GET",
       url: "/" + forum,
       success: function(result) {
-        var forumQuestions = new QuestionCollection(result, forum);
+        var forumQuestions = new QuestionCollection(result);
         new QuestionsView({collection: forumQuestions});
+        forumID = forum;
       },
       error: function(err) {
         console.log("Err");

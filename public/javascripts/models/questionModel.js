@@ -10,6 +10,6 @@ var Question = Backbone.Model.extend({
     }
   },
   urlRoot: function() {
-    return "forum/" + "90832" + "/question";
+    return "forum/" + forumID + "/question";
   }
 });
