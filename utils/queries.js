@@ -41,14 +41,15 @@ var db = (function() {
   };
 
   var createForum = function(req, res) {
-    var newRoute = "" + Math.floor(Math.random() * 100) + Date.now();
+    var title = req.query.title ? req.query.title : req.body.title;
+    var newRoute = "" + Math.floor(Date.now() % Math.random() * 100000);
     var forum = new Forum({
-      title: req.query.name,
+      title: title,
       url: newRoute
     });
     forum.save(function(err) {
       if(err) { throw err; }
-      res.status(201).send();
+      res.status(201).send({route: newRoute});
     });
   }
 
