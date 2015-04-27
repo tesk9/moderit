@@ -43,15 +43,31 @@ var db = (function() {
   var createForum = function(req, res) {
     var title = req.query.title ? req.query.title : req.body.title;
     var newRoute = "" + Math.floor(Date.now() % Math.random() * 100000);
-    var forum = new Forum({
-      title: title,
-      url: newRoute
+    checkForUrlCollision(newRoute, function(uniqRoute) {
+      if(uniqRoute) {
+        var forum = new Forum({
+          title: title,
+          url: newRoute
+        });
+        forum.save(function(err) {
+          if(err) { throw err; }
+          res.status(201).send({route: newRoute});
+        });
+      } else {
+        createForum(req, res);
+      }
+    })
+  };
+
+  var checkForUrlCollision = function(url, callback) {
+    //TODO: combine this func and findOneForum function
+     Forum.findOne({url: url}).exec(function(err, forum) {
+      if(err) {
+        throw err;
+      }
+      callback(!forum);
     });
-    forum.save(function(err) {
-      if(err) { throw err; }
-      res.status(201).send({route: newRoute});
-    });
-  }
+  };
 
   return {
     findOneForum: findOneForum,
