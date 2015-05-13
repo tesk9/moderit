@@ -2,32 +2,31 @@ var Forum = require('../forums/forumSchema.js');
 var Question = require('../questions/QuestionSchema.js');
 
 var db = (function() {
-  var findOneForum = function(req, res, callback) {
-    Forum.findOne({url: req.params.url}).exec(function(err, forum) {
+  var findOneForum = function(url, successCallback, failureCallback) {
+    Forum.findOne({url: url}).exec(function(err, forum) {
       if(err) {
         throw err;
       }
       if(forum) {
-        callback ? callback(forum) : res.json(forum);
+        successCallback(forum);
       } else {
-        res.status(404).send();
+        failureCallback();
       } 
     });
   };
   
-  var getQuestionsByForum = function(req, res) {
-    findOneForum(req, res, function(forum) {
+  var getQuestionsByForum = function(url, successCallback, failureCallback) {
+    findOneForum(url, function(forum) {
       Question.find({forum_id: forum.id}).exec(function(err, questions) {
         if(err) {
           throw err;
         }
-        res.json(questions);
+        successCallback(questions)
       });
-    });
+    }, failureCallback);
   };
 
-  var addQuestion = function(req, res) {
-    var quest = req.query.question ? req.query.question : req.body.question;
+  var addQuestion = function(quest, callback) {
     findOneForum(req, res, function(forum) {
       var question = new Question({
         question: quest,
@@ -35,38 +34,26 @@ var db = (function() {
       });
       question.save(function(err) {
         if(err) { throw err; }
-        res.status(201).send();
+        callback();
       });
     });
   };
 
-  var createForum = function(req, res) {
-    var title = req.query.title ? req.query.title : req.body.title;
+  var createForum = function(title, callback) {
     var newRoute = "" + Math.floor(Date.now() % Math.random() * 100000);
-    checkForUrlCollision(newRoute, function(uniqRoute) {
-      if(uniqRoute) {
-        var forum = new Forum({
-          title: title,
-          url: newRoute
-        });
-        forum.save(function(err) {
-          if(err) { throw err; }
-          res.status(201).send({route: newRoute});
-        });
-      } else {
-        createForum(req, res);
-      }
+    findOneForum(newRoute, function() {
+      // If a forum exists at this route, create a new route
+      createForum(title, callback);
+    }, function() {
+      var forum = new Forum({
+        title: title,
+        url: newRoute
+      });
+      forum.save(function(err) {
+        if(err) { throw err; }
+        callback(newRoute);
+      });
     })
-  };
-
-  var checkForUrlCollision = function(url, callback) {
-    //TODO: combine this func and findOneForum function
-     Forum.findOne({url: url}).exec(function(err, forum) {
-      if(err) {
-        throw err;
-      }
-      callback(!forum);
-    });
   };
 
   return {
